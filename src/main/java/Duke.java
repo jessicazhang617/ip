@@ -69,38 +69,53 @@ public class Duke {
      *
      * @param t new Task
      */
-    public static void addToList(Task t,String typeOfTask){
+    public static void addToList(Task t){
         list[NUM_OF_TASKS] = t;
         NUM_OF_TASKS++;
         System.out.print("Got it. I've added this task:\n" + "[" + t.getTypeOfTask() + "]" + "[" + t.getStatusIcon() + "] "+
                 t.description);
     }
 
+    /**
+     * Creates a new ToDo
+     *
+     * @param line User input
+     */
     public static void addToDo(String line){
         String description = line.substring(5);
 
         ToDo toDo = new ToDo(description);
-        addToList(toDo, toDo.typeOfTask);
+        addToList(toDo);
         System.out.println();
     }
 
+    /**
+     * Creates a new Deadline
+     *
+     * @param line User input
+     */
     public static void addDeadline(String line){
         int startOfDateTime = line.indexOf("by");
         String dateTime = line.substring(startOfDateTime+3);
         String description = line.substring(9,startOfDateTime-1);
 
         Deadline d = new Deadline(description,dateTime);
-        addToList(d,d.typeOfTask);
+        addToList(d);
         System.out.println("(at: "+ d.getDateTime() + ")");
     }
 
+    /**
+     * Creates a new Event
+     *
+     * @param line User input
+     */
     public static void addEvent(String line){
         int startOfDateTime = line.indexOf("at");
         String dateTime = line.substring(startOfDateTime+3);
         String description = line.substring(6,startOfDateTime-1);
 
         Event e = new Event (description,dateTime);
-        addToList(e,e.typeOfTask);
+        addToList(e);
         System.out.println("(at: "+ e.getDateTime() + ")");
     }
 
