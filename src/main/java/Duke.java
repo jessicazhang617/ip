@@ -8,7 +8,8 @@ import java.util.Scanner;
  */
 public class Duke {
 
-    public static int NUM_OF_TASKS = 0;
+    private static int NUM_OF_TASKS = 0;
+    private static Task[] list = new Task[100];
 
     /**
      * Runs other methods for main.
@@ -29,15 +30,14 @@ public class Duke {
                 + "| | | | | | | |/ / _ \\\n"
                 + "| |_| | |_| |   <  __/\n"
                 + "|____/ \\__,_|_|\\_\\___|\n";
-        System.out.println("Hello from\n" + logo);
-        System.out.println("Hello! I'm Duke\n" + "What can I do for you?");
+        System.out.println("Yo Wassup, da name's\n" + logo);
+        System.out.println("Hi bro I'm Duke\n" + "Whatcha wanna do?");
     }
 
     /**
      * Returns actions for lists based on user input.
      */
     public static void listActions() {
-        Task[] list = new Task[100];
         Scanner in = new Scanner(System.in);
         String line;
 
@@ -50,22 +50,58 @@ public class Duke {
                 break;
             }else if(line.equalsIgnoreCase("list")) {
                 printList(list);
-            }else{
-                list[NUM_OF_TASKS] = addToList(line);
+            }else if (line.contains("deadline")) {
+                addDeadline(line);
+                System.out.format("Now you have %s task%s in the list.\n", NUM_OF_TASKS,((NUM_OF_TASKS==1?"":"s")));
+            }else if (line.contains("event")) {
+                addEvent(line);
+                System.out.format("Now you have %s task%s in the list.\n", NUM_OF_TASKS,((NUM_OF_TASKS==1?"":"s")));
+            }else {
+                addToDo(line);
+                System.out.format("Now you have %s task%s in the list.\n", NUM_OF_TASKS,((NUM_OF_TASKS==1?"":"s")));
             }
         } while (!line.equalsIgnoreCase("bye"));
 
     }
+
     /**
      * Adds new task to the list.
      *
-     * @param line User input task name.
+     * @param t new Task
      */
-    public static Task addToList(String line){
-        Task t = new Task(line);
-        System.out.println("added " + line);
+    public static void addToList(Task t,String typeOfTask){
+        list[NUM_OF_TASKS] = t;
         NUM_OF_TASKS++;
-        return t;
+        System.out.print("Got it. I've added this task:\n" + "[" + t.getTypeOfTask() + "]" + "[" + t.getStatusIcon() + "] "+
+                t.description);
+    }
+
+    public static void addToDo(String line){
+        String description = line.substring(5);
+
+        ToDo toDo = new ToDo(description);
+        addToList(toDo, toDo.typeOfTask);
+        System.out.println();
+    }
+
+    public static void addDeadline(String line){
+        int startOfDateTime = line.indexOf("by");
+        String dateTime = line.substring(startOfDateTime+3);
+        String description = line.substring(9,startOfDateTime-1);
+
+        Deadline d = new Deadline(description,dateTime);
+        addToList(d,d.typeOfTask);
+        System.out.println("(at: "+ d.getDateTime() + ")");
+    }
+
+    public static void addEvent(String line){
+        int startOfDateTime = line.indexOf("at");
+        String dateTime = line.substring(startOfDateTime+3);
+        String description = line.substring(6,startOfDateTime-1);
+
+        Event e = new Event (description,dateTime);
+        addToList(e,e.typeOfTask);
+        System.out.println("(at: "+ e.getDateTime() + ")");
     }
 
     /**
@@ -79,7 +115,7 @@ public class Duke {
         }else {
             System.out.println("Here are the tasks in your list.");
             for (int i = 0; i < NUM_OF_TASKS; i++) {
-            System.out.println(i+1 + ". " + "[" + list[i].getStatusIcon() + "] " + list[i].description);
+                System.out.println(i+1 + ". " + "[" + list[i].getStatusIcon() + "] " + list[i].description);
             }
         }
     }
@@ -104,7 +140,6 @@ public class Duke {
     public static void printBye(){
         System.out.println("Bye. Hope to see you again soon!");
     }
-
 
 }
 

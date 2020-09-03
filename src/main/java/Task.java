@@ -6,6 +6,7 @@ public class Task {
     protected String description;
     /** Boolean flag of whether task is done.*/
     protected boolean isDone;
+    protected String typeOfTask;
 
     /** Task Constructor.*/
     public Task(String description) {
@@ -18,6 +19,10 @@ public class Task {
      * */
     public String getStatusIcon() {
         return (isDone ? "\u2713" : "\u2718"); //return tick or X symbols
+    }
+
+    public String getTypeOfTask() {
+        return typeOfTask;
     }
 
     /** Set boolean isDone as true.*/
