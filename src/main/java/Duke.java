@@ -51,13 +51,13 @@ public class Duke {
             }else if(line.equalsIgnoreCase("list")) {
                 printList(list);
             }else if (line.contains("deadline")) {
-                addDeadline(line);
+                createDeadline(line);
                 System.out.format("Now you have %s task%s in the list.\n", NUM_OF_TASKS,((NUM_OF_TASKS==1?"":"s")));
             }else if (line.contains("event")) {
-                addEvent(line);
+                createEvent(line);
                 System.out.format("Now you have %s task%s in the list.\n", NUM_OF_TASKS,((NUM_OF_TASKS==1?"":"s")));
             }else {
-                addToDo(line);
+                createToDo(line);
                 System.out.format("Now you have %s task%s in the list.\n", NUM_OF_TASKS,((NUM_OF_TASKS==1?"":"s")));
             }
         } while (!line.equalsIgnoreCase("bye"));
@@ -81,7 +81,7 @@ public class Duke {
      *
      * @param line User input
      */
-    public static void addToDo(String line){
+    public static void createToDo(String line){
         String description = line.substring(5);
 
         ToDo toDo = new ToDo(description);
@@ -94,14 +94,14 @@ public class Duke {
      *
      * @param line User input
      */
-    public static void addDeadline(String line){
+    public static void createDeadline(String line){
         int startOfDateTime = line.indexOf("by");
         String dateTime = line.substring(startOfDateTime+3);
         String description = line.substring(9,startOfDateTime-1);
 
         Deadline d = new Deadline(description,dateTime);
         addToList(d);
-        System.out.println("(at: "+ d.getDateTime() + ")");
+        System.out.println("(by: "+ d.getDateTime() + ")");
     }
 
     /**
@@ -109,7 +109,7 @@ public class Duke {
      *
      * @param line User input
      */
-    public static void addEvent(String line){
+    public static void createEvent(String line){
         int startOfDateTime = line.indexOf("at");
         String dateTime = line.substring(startOfDateTime+3);
         String description = line.substring(6,startOfDateTime-1);
