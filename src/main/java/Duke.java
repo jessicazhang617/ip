@@ -9,7 +9,8 @@ import java.util.Scanner;
 public class Duke {
 
     private static int NUM_OF_TASKS = 0;
-    private static Task[] list = new Task[100];
+    private static int MAX_TASKS_NUM = 100;
+    private static final Task[] list = new Task[MAX_TASKS_NUM];
 
     /**
      * Runs other methods for main.
