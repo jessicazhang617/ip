@@ -1,15 +1,19 @@
+package duke.task;
+
 /**
  * Represents a task.
  */
-public class Task {
+public abstract class Task {
     /** Description of task.*/
     protected String description;
     /** Boolean flag of whether task is done.*/
     protected boolean isDone;
-    /** Type of Task.*/
+    /** Type of duke.task.Task.*/
     protected String typeOfTask;
+    protected final String TICK_SYMBOL= "\u2713";
+    protected final String CROSS_SYMBOL= "\u2718";
 
-    /** Task object Constructor.*/
+    /** duke.task.Task object Constructor.*/
     public Task(String description) {
         this.description = description;
         this.isDone = false;
@@ -19,7 +23,7 @@ public class Task {
      * Retrieves status icon for task.
      * */
     public String getStatusIcon() {
-        return (isDone ? "\u2713" : "\u2718"); //return tick or X symbols
+        return (isDone ? TICK_SYMBOL : CROSS_SYMBOL); //return tick or X symbols
     }
 
     /** Retrieves type of task.*/
@@ -32,4 +36,8 @@ public class Task {
         isDone = true;
     }
 
+    /** Retrieves task description.*/
+    public String getDescription() {
+        return description;
+    }
 }
