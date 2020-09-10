@@ -1,16 +1,16 @@
 public class Deadline extends Task{
     /** Date and time.*/
-    private String dateTime;
+    private String taskDeadline;
 
     /** Deadline object Constructor.*/
-    public Deadline(String description, String dateTime) {
+    public Deadline(String description, String taskDeadline) {
         super(description);
-        this.dateTime = dateTime;
+        this.taskDeadline = taskDeadline;
     }
 
     /** Retrieves date and time.*/
-    public String getDateTime() {
-        return dateTime;
+    public String getTaskDeadline() {
+        return taskDeadline;
     }
 
     /** Retrieves type of task.*/

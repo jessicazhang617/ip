@@ -1,13 +1,15 @@
 /**
  * Represents a task.
  */
-public class Task {
+public abstract class Task {
     /** Description of task.*/
     protected String description;
     /** Boolean flag of whether task is done.*/
     protected boolean isDone;
     /** Type of Task.*/
     protected String typeOfTask;
+    protected final String TICK_SYMBOL= "\u2713";
+    protected final String CROSS_SYMBOL= "\u2718";
 
     /** Task object Constructor.*/
     public Task(String description) {
@@ -19,7 +21,7 @@ public class Task {
      * Retrieves status icon for task.
      * */
     public String getStatusIcon() {
-        return (isDone ? "\u2713" : "\u2718"); //return tick or X symbols
+        return (isDone ? TICK_SYMBOL : CROSS_SYMBOL); //return tick or X symbols
     }
 
     /** Retrieves type of task.*/
@@ -31,5 +33,6 @@ public class Task {
     public void markAsDone(){
         isDone = true;
     }
+
 
 }

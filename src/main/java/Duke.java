@@ -9,7 +9,8 @@ import java.util.Scanner;
 public class Duke {
 
     private static int NUM_OF_TASKS = 0;
-    private static Task[] list = new Task[100];
+    private final static int MAX_TASK_NUM = 100;
+    private final static Task[] list = new Task[MAX_TASK_NUM];
 
     /**
      * Runs other methods for main.
@@ -18,13 +19,17 @@ public class Duke {
      */
     public static void main(String[] args) {
         printGreetings();
-        listActions();
+        try {
+            listActions();
+        }catch(StringIndexOutOfBoundsException e){
+            System.out.println("☹ OOPS!!! I'm sorry, but I don't know what that means :-(");
+        }
     }
 
     /**
      * Prints greetings.
      */
-    public static void printGreetings(){
+    private static void printGreetings(){
         String logo = " ____        _        \n"
                 + "|  _ \\ _   _| | _____ \n"
                 + "| | | | | | | |/ / _ \\\n"
@@ -37,28 +42,34 @@ public class Duke {
     /**
      * Returns actions for lists based on user input.
      */
-    public static void listActions() {
+    private static void listActions() {
         Scanner in = new Scanner(System.in);
         String line;
 
         do {
             line = in.nextLine();
             if (line.contains("done")){
-                updateTask(line,list);
+                updateTask(line);
             }else if (line.equalsIgnoreCase("bye")){
                 printBye();
                 break;
             }else if(line.equalsIgnoreCase("list")) {
-                printList(list);
+                printList();
             }else if (line.contains("deadline")) {
                 createDeadline(line);
                 System.out.format("Now you have %s task%s in the list.\n", NUM_OF_TASKS,((NUM_OF_TASKS==1?"":"s")));
             }else if (line.contains("event")) {
                 createEvent(line);
                 System.out.format("Now you have %s task%s in the list.\n", NUM_OF_TASKS,((NUM_OF_TASKS==1?"":"s")));
+            }else if (line.contains("todo")) {
+                try {
+                    createToDo(line);
+                    System.out.format("Now you have %s task%s in the list.\n", NUM_OF_TASKS, ((NUM_OF_TASKS == 1 ? "" : "s")));
+                }catch(StringIndexOutOfBoundsException e){
+                    System.out.println("☹ OOPS!!! The description of a todo cannot be empty.");
+                }
             }else {
-                createToDo(line);
-                System.out.format("Now you have %s task%s in the list.\n", NUM_OF_TASKS,((NUM_OF_TASKS==1?"":"s")));
+                throw new StringIndexOutOfBoundsException();
             }
         } while (!line.equalsIgnoreCase("bye"));
 
@@ -67,13 +78,13 @@ public class Duke {
     /**
      * Adds new task to the list.
      *
-     * @param t new Task
+     * @param task new Task
      */
-    public static void addToList(Task t){
-        list[NUM_OF_TASKS] = t;
+    private static void addToList(Task task){
+        list[NUM_OF_TASKS] = task;
         NUM_OF_TASKS++;
-        System.out.print("Got it. I've added this task:\n" + "[" + t.getTypeOfTask() + "]" + "[" + t.getStatusIcon() + "] "+
-                t.description);
+        System.out.print("Got it. I've added this task:\n" + "[" + task.getTypeOfTask() + "]" + "[" + task.getStatusIcon() + "] "+
+                task.description);
     }
 
     /**
@@ -81,7 +92,7 @@ public class Duke {
      *
      * @param line User input
      */
-    public static void createToDo(String line){
+    private static void createToDo(String line){
         String description = line.substring(5);
 
         ToDo toDo = new ToDo(description);
@@ -94,14 +105,14 @@ public class Duke {
      *
      * @param line User input
      */
-    public static void createDeadline(String line){
-        int startOfDateTime = line.indexOf("by");
-        String dateTime = line.substring(startOfDateTime+3);
-        String description = line.substring(9,startOfDateTime-1);
+    private static void createDeadline(String line){
+        int startOfTaskDeadline = line.indexOf("by");
+        String taskDeadline = line.substring(startOfTaskDeadline + 3);
+        String description = line.substring(9,startOfTaskDeadline - 1);
 
-        Deadline d = new Deadline(description,dateTime);
-        addToList(d);
-        System.out.println("(by: "+ d.getDateTime() + ")");
+        Deadline deadline = new Deadline(description,taskDeadline);
+        addToList(deadline);
+        System.out.println("(by: "+ deadline.getTaskDeadline() + ")");
     }
 
     /**
@@ -109,50 +120,48 @@ public class Duke {
      *
      * @param line User input
      */
-    public static void createEvent(String line){
-        int startOfDateTime = line.indexOf("at");
-        String dateTime = line.substring(startOfDateTime+3);
-        String description = line.substring(6,startOfDateTime-1);
+    private static void createEvent(String line){
+        int startOfTaskDeadline = line.indexOf("at");
+        String taskDeadline = line.substring(startOfTaskDeadline + 3);
+        String description = line.substring(6,startOfTaskDeadline - 1);
 
-        Event e = new Event (description,dateTime);
-        addToList(e);
-        System.out.println("(at: "+ e.getDateTime() + ")");
+        Event event = new Event(description,taskDeadline);
+        addToList(event);
+        System.out.println("(at: "+ event.getTaskDeadline() + ")");
     }
 
     /**
      * Prints task list.
      *
-     * @param list Task list.
      */
-    public static void printList(Task[] list) {
+    private static void printList() {
         if (NUM_OF_TASKS == 0){
             System.out.println("The list is empty!");
         }else {
             System.out.println("Here are the tasks in your list.");
             for (int i = 0; i < NUM_OF_TASKS; i++) {
-                System.out.println(i+1 + ". " + "[" + list[i].getStatusIcon() + "] " + list[i].description);
+                System.out.println(i+1 + ". " + "[" + Duke.list[i].getStatusIcon() + "] " + Duke.list[i].description);
             }
         }
     }
 
     /**
      * Marks task as done.
+     *  @param line User Input.
      *
-     * @param line User Input.
-     * @param list Task list.
      */
-    public static void updateTask(String line,Task[] list){
+    private static void updateTask(String line){
         String taskNumString = line.substring(5);
-        int taskNumInt = Integer.parseInt(taskNumString);
-        list[taskNumInt-1].markAsDone();
+        int taskNumInt = Integer.parseInt(taskNumString)-1;
+        Duke.list[taskNumInt].markAsDone();
         System.out.println("Nice! I've marked this task as done:");
-        System.out.println("["+list[taskNumInt-1].getStatusIcon()+"]"+ list[taskNumInt-1].description);
+        System.out.println("["+ Duke.list[taskNumInt-1].getStatusIcon()+"]"+ Duke.list[taskNumInt-1].description);
     }
 
     /**
      * Prints goodbye.
      */
-    public static void printBye(){
+    private static void printBye(){
         System.out.println("Bye. Hope to see you again soon!");
     }
 
