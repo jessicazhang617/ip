@@ -1,8 +1,15 @@
+package duke;
+
+import duke.task.Deadline;
+import duke.task.Event;
+import duke.task.Task;
+import duke.task.ToDo;
+
 import java.util.Scanner;
 
 /**
- * Represents the bot Duke.
- * Duke can perform tasks based on user input.
+ * Represents the bot duke.Duke.
+ * duke.Duke can perform tasks based on user input.
  *
  * {@value #NUM_OF_TASKS} Number of Tasks.
  */
@@ -36,7 +43,7 @@ public class Duke {
                 + "| |_| | |_| |   <  __/\n"
                 + "|____/ \\__,_|_|\\_\\___|\n";
         System.out.println("Yo Wassup, da name's\n" + logo);
-        System.out.println("Hi bro I'm Duke\n" + "Whatcha wanna do?");
+        System.out.println("Hi bro I'm duke.Duke\n" + "Whatcha wanna do?");
     }
 
     /**
@@ -78,17 +85,17 @@ public class Duke {
     /**
      * Adds new task to the list.
      *
-     * @param task new Task
+     * @param task new duke.task.Task
      */
     private static void addToList(Task task){
         list[NUM_OF_TASKS] = task;
         NUM_OF_TASKS++;
         System.out.print("Got it. I've added this task:\n" + "[" + task.getTypeOfTask() + "]" + "[" + task.getStatusIcon() + "] "+
-                task.description);
+                task.getDescription());
     }
 
     /**
-     * Creates a new ToDo
+     * Creates a new duke.task.ToDo
      *
      * @param line User input
      */
@@ -101,7 +108,7 @@ public class Duke {
     }
 
     /**
-     * Creates a new Deadline
+     * Creates a new duke.task.Deadline
      *
      * @param line User input
      */
@@ -116,7 +123,7 @@ public class Duke {
     }
 
     /**
-     * Creates a new Event
+     * Creates a new duke.task.Event
      *
      * @param line User input
      */
@@ -140,7 +147,7 @@ public class Duke {
         }else {
             System.out.println("Here are the tasks in your list.");
             for (int i = 0; i < NUM_OF_TASKS; i++) {
-                System.out.println(i+1 + ". " + "[" + Duke.list[i].getStatusIcon() + "] " + Duke.list[i].description);
+                System.out.println(i+1 + ". " + "[" + Duke.list[i].getStatusIcon() + "] " + Duke.list[i].getDescription());
             }
         }
     }
@@ -155,7 +162,7 @@ public class Duke {
         int taskNumInt = Integer.parseInt(taskNumString)-1;
         Duke.list[taskNumInt].markAsDone();
         System.out.println("Nice! I've marked this task as done:");
-        System.out.println("["+ Duke.list[taskNumInt-1].getStatusIcon()+"]"+ Duke.list[taskNumInt-1].description);
+        System.out.println("["+ Duke.list[taskNumInt-1].getStatusIcon()+"]"+ Duke.list[taskNumInt-1].getDescription());
     }
 
     /**

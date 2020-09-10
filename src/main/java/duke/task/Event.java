@@ -1,9 +1,11 @@
-public class Deadline extends Task{
+package duke.task;
+
+public class Event extends Task{
     /** Date and time.*/
     private String taskDeadline;
 
-    /** Deadline object Constructor.*/
-    public Deadline(String description, String taskDeadline) {
+    /** duke.task.Event object constructor.*/
+    public Event(String description, String taskDeadline) {
         super(description);
         this.taskDeadline = taskDeadline;
     }
@@ -16,6 +18,6 @@ public class Deadline extends Task{
     /** Retrieves type of task.*/
     @Override
     public String getTypeOfTask() {
-        return "D";
+        return "E";
     }
 }
