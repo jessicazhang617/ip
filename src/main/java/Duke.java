@@ -1,25 +1,21 @@
-package duke;
-
 import duke.task.Deadline;
 import duke.task.Event;
 import duke.task.Task;
 import duke.task.ToDo;
-import duke.AddTaskCommand;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
- * Represents the bot duke.Duke.
- * duke.Duke can perform tasks based on user input.
+ * Represents the bot Duke.
+ * Duke can perform tasks based on user input.
  *
- * {@value #NUM_OF_TASKS} Number of Tasks.
+
  */
 public class Duke {
 
     private static int NUM_OF_TASKS = 0;
-    private final static int MAX_TASK_NUM = 100;
-    private final static Task[] list = new Task[MAX_TASK_NUM];
+    private final static ArrayList<Task> list = new ArrayList<Task>();
 
     /**
      * Runs other methods for main.
@@ -45,7 +41,7 @@ public class Duke {
                 + "| |_| | |_| |   <  __/\n"
                 + "|____/ \\__,_|_|\\_\\___|\n";
         System.out.println("Yo Wassup, da name's\n" + logo);
-        System.out.println("Hi bro I'm duke.Duke\n" + "Whatcha wanna do?");
+        System.out.println("Hi bro I'm Duke\n" + "Whatcha wanna do?");
     }
 
     /**
@@ -54,8 +50,6 @@ public class Duke {
     private static void listActions() {
         Scanner in = new Scanner(System.in);
         String userInput;
-        userInput = in.nextLine();
-        ArrayList<String> userInputs= new ArrayList<>();
 
         do {
             userInput = in.nextLine();
@@ -79,7 +73,13 @@ public class Duke {
                 }catch(StringIndexOutOfBoundsException e){
                     System.out.println("☹ OOPS!!! The description of a todo cannot be empty.");
                 }
-            }else {
+            }else if (userInput.contains("delete")){
+                try {
+                    deleteTask(userInput);
+                }catch (NumberFormatException e) {
+                    System.out.println("☹ OOPS!!! Please enter a task number.");
+                }
+            } else {
                 throw new StringIndexOutOfBoundsException();
             }
         } while (!userInput.equalsIgnoreCase("bye"));
@@ -92,7 +92,7 @@ public class Duke {
      * @param task new duke.task.Task
      */
     private static void addToList(Task task){
-        list[NUM_OF_TASKS] = task;
+        list.add(task);
         NUM_OF_TASKS++;
         System.out.print("Got it. I've added this task:\n" + "[" + task.getTypeOfTask() + "]" + "[" + task.getStatusIcon() + "] "+
                 task.getDescription());
@@ -105,7 +105,6 @@ public class Duke {
      */
     private static void createToDo(String line){
         String description = line.substring(5);
-
         ToDo toDo = new ToDo(description);
         addToList(toDo);
         System.out.println();
@@ -151,7 +150,8 @@ public class Duke {
         }else {
             System.out.println("Here are the tasks in your list.");
             for (int i = 0; i < NUM_OF_TASKS; i++) {
-                System.out.println(i+1 + ". " + "[" + Duke.list[i].getStatusIcon() + "] " + Duke.list[i].getDescription());
+                System.out.print(i+1 + ". ");
+                list.get(i).print();
             }
         }
     }
@@ -164,10 +164,25 @@ public class Duke {
     private static void updateTask(String line){
         String taskNumString = line.substring(5);
         int taskNumInt = Integer.parseInt(taskNumString)-1;
-        Duke.list[taskNumInt].markAsDone();
+        list.get(taskNumInt).markAsDone();
         System.out.println("Nice! I've marked this task as done:");
-        System.out.println("["+ Duke.list[taskNumInt-1].getStatusIcon()+"]"+ Duke.list[taskNumInt-1].getDescription());
+        list.get(taskNumInt).print();
     }
+
+    /**
+     * Deletes Task.
+     * @param line index of task to delete.
+     */
+    private static void deleteTask(String line){
+        String taskNumString = line.substring(7);
+        int indexOfTask = Integer.parseInt(taskNumString)-1;
+        System.out.println("Noted. I've removed this task:");
+        list.get(indexOfTask).print();
+        list.remove(indexOfTask);
+        NUM_OF_TASKS--;
+        System.out.format("Now you have %s task%s in the list.\n", NUM_OF_TASKS, ((NUM_OF_TASKS == 1 ? "" : "s")));
+    }
+
 
     /**
      * Prints goodbye.

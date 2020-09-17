@@ -40,4 +40,6 @@ public abstract class Task {
     public String getDescription() {
         return description;
     }
+
+    public abstract void print();
 }

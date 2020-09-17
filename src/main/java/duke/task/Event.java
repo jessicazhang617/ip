@@ -2,7 +2,6 @@ package duke.task;
 
 
 public class Event extends Task {
-
     /** Date and time.*/
     private String taskDeadline;
 
@@ -21,5 +20,11 @@ public class Event extends Task {
     @Override
     public String getTypeOfTask() {
         return "E";
+    }
+
+    @Override
+    public void print(){
+        System.out.println("[" + this.getTypeOfTask() + "]" + "[" + this.getStatusIcon() + "] " +
+                this.getDescription() + "(at: " + this.getTaskDeadline() + ")");
     }
 }
