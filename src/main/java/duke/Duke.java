@@ -4,7 +4,9 @@ import duke.task.Deadline;
 import duke.task.Event;
 import duke.task.Task;
 import duke.task.ToDo;
+import duke.AddTaskCommand;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -51,26 +53,28 @@ public class Duke {
      */
     private static void listActions() {
         Scanner in = new Scanner(System.in);
-        String line;
+        String userInput;
+        userInput = in.nextLine();
+        ArrayList<String> userInputs= new ArrayList<>();
 
         do {
-            line = in.nextLine();
-            if (line.contains("done")){
-                updateTask(line);
-            }else if (line.equalsIgnoreCase("bye")){
+            userInput = in.nextLine();
+            if (userInput.contains("done")){
+                updateTask(userInput);
+            }else if (userInput.equalsIgnoreCase("bye")){
                 printBye();
                 break;
-            }else if(line.equalsIgnoreCase("list")) {
+            }else if(userInput.equalsIgnoreCase("list")) {
                 printList();
-            }else if (line.contains("deadline")) {
-                createDeadline(line);
+            }else if (userInput.contains("deadline")) {
+                createDeadline(userInput);
                 System.out.format("Now you have %s task%s in the list.\n", NUM_OF_TASKS,((NUM_OF_TASKS==1?"":"s")));
-            }else if (line.contains("event")) {
-                createEvent(line);
+            }else if (userInput.contains("event")) {
+                createEvent(userInput);
                 System.out.format("Now you have %s task%s in the list.\n", NUM_OF_TASKS,((NUM_OF_TASKS==1?"":"s")));
-            }else if (line.contains("todo")) {
+            }else if (userInput.contains("todo")) {
                 try {
-                    createToDo(line);
+                    createToDo(userInput);
                     System.out.format("Now you have %s task%s in the list.\n", NUM_OF_TASKS, ((NUM_OF_TASKS == 1 ? "" : "s")));
                 }catch(StringIndexOutOfBoundsException e){
                     System.out.println("☹ OOPS!!! The description of a todo cannot be empty.");
@@ -78,7 +82,7 @@ public class Duke {
             }else {
                 throw new StringIndexOutOfBoundsException();
             }
-        } while (!line.equalsIgnoreCase("bye"));
+        } while (!userInput.equalsIgnoreCase("bye"));
 
     }
 
