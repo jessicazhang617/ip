@@ -1,5 +1,4 @@
 package duke;
-import duke.Duke;
 import duke.task.Task;
 
 public class AddTaskCommand extends Command{

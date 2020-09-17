@@ -1,17 +1,14 @@
-package duke;
-
 import duke.task.Deadline;
 import duke.task.Event;
 import duke.task.Task;
 import duke.task.ToDo;
-import duke.AddTaskCommand;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
- * Represents the bot duke.Duke.
- * duke.Duke can perform tasks based on user input.
+ * Represents the bot Duke.
+ * Duke can perform tasks based on user input.
  *
  * {@value #NUM_OF_TASKS} Number of Tasks.
  */
@@ -45,7 +42,7 @@ public class Duke {
                 + "| |_| | |_| |   <  __/\n"
                 + "|____/ \\__,_|_|\\_\\___|\n";
         System.out.println("Yo Wassup, da name's\n" + logo);
-        System.out.println("Hi bro I'm duke.Duke\n" + "Whatcha wanna do?");
+        System.out.println("Hi bro I'm Duke\n" + "Whatcha wanna do?");
     }
 
     /**
