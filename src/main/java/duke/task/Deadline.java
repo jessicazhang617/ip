@@ -20,4 +20,10 @@ public class Deadline extends Task {
     public String getTypeOfTask() {
         return "D";
     }
+
+    @Override
+    public void print(){
+        System.out.println("[" + this.getTypeOfTask() + "]" + "[" + this.getStatusIcon() + "] " +
+                this.getDescription() + "(by: " + this.getTaskDeadline() + ")");
+    }
 }

@@ -1,15 +1,21 @@
+import duke.task.Deadline;
+import duke.task.Event;
+import duke.task.Task;
+import duke.task.ToDo;
+
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
  * Represents the bot Duke.
  * Duke can perform tasks based on user input.
  *
- * {@value #NUM_OF_TASKS} Number of Tasks.
+
  */
 public class Duke {
 
     private static int NUM_OF_TASKS = 0;
-    private static Task[] list = new Task[100];
+    private final static ArrayList<Task> list = new ArrayList<Task>();
 
     /**
      * Runs other methods for main.
@@ -18,13 +24,17 @@ public class Duke {
      */
     public static void main(String[] args) {
         printGreetings();
-        listActions();
+        try {
+            listActions();
+        }catch(StringIndexOutOfBoundsException e){
+            System.out.println("☹ OOPS!!! I'm sorry, but I don't know what that means :-(");
+        }
     }
 
     /**
      * Prints greetings.
      */
-    public static void printGreetings(){
+    private static void printGreetings(){
         String logo = " ____        _        \n"
                 + "|  _ \\ _   _| | _____ \n"
                 + "| | | | | | | |/ / _ \\\n"
@@ -37,122 +47,147 @@ public class Duke {
     /**
      * Returns actions for lists based on user input.
      */
-    public static void listActions() {
+    private static void listActions() {
         Scanner in = new Scanner(System.in);
-        String line;
+        String userInput;
 
         do {
-            line = in.nextLine();
-            if (line.contains("done")){
-                updateTask(line,list);
-            }else if (line.equalsIgnoreCase("bye")){
+            userInput = in.nextLine();
+            if (userInput.contains("done")){
+                updateTask(userInput);
+            }else if (userInput.equalsIgnoreCase("bye")){
                 printBye();
                 break;
-            }else if(line.equalsIgnoreCase("list")) {
-                printList(list);
-            }else if (line.contains("deadline")) {
-                addDeadline(line);
+            }else if(userInput.equalsIgnoreCase("list")) {
+                printList();
+            }else if (userInput.contains("deadline")) {
+                createDeadline(userInput);
                 System.out.format("Now you have %s task%s in the list.\n", NUM_OF_TASKS,((NUM_OF_TASKS==1?"":"s")));
-            }else if (line.contains("event")) {
-                addEvent(line);
+            }else if (userInput.contains("event")) {
+                createEvent(userInput);
                 System.out.format("Now you have %s task%s in the list.\n", NUM_OF_TASKS,((NUM_OF_TASKS==1?"":"s")));
-            }else {
-                addToDo(line);
-                System.out.format("Now you have %s task%s in the list.\n", NUM_OF_TASKS,((NUM_OF_TASKS==1?"":"s")));
+            }else if (userInput.contains("todo")) {
+                try {
+                    createToDo(userInput);
+                    System.out.format("Now you have %s task%s in the list.\n", NUM_OF_TASKS, ((NUM_OF_TASKS == 1 ? "" : "s")));
+                }catch(StringIndexOutOfBoundsException e){
+                    System.out.println("☹ OOPS!!! The description of a todo cannot be empty.");
+                }
+            }else if (userInput.contains("delete")){
+                try {
+                    deleteTask(userInput);
+                }catch (NumberFormatException e) {
+                    System.out.println("☹ OOPS!!! Please enter a task number.");
+                }
+            } else {
+                throw new StringIndexOutOfBoundsException();
             }
-        } while (!line.equalsIgnoreCase("bye"));
+        } while (!userInput.equalsIgnoreCase("bye"));
 
     }
 
     /**
      * Adds new task to the list.
      *
-     * @param t new Task
+     * @param task new duke.task.Task
      */
-    public static void addToList(Task t){
-        list[NUM_OF_TASKS] = t;
+    private static void addToList(Task task){
+        list.add(task);
         NUM_OF_TASKS++;
-        System.out.print("Got it. I've added this task:\n" + "[" + t.getTypeOfTask() + "]" + "[" + t.getStatusIcon() + "] "+
-                t.description);
+        System.out.print("Got it. I've added this task:\n" + "[" + task.getTypeOfTask() + "]" + "[" + task.getStatusIcon() + "] "+
+                task.getDescription());
     }
 
     /**
-     * Creates a new ToDo
+     * Creates a new duke.task.ToDo
      *
      * @param line User input
      */
-    public static void addToDo(String line){
+    private static void createToDo(String line){
         String description = line.substring(5);
-
         ToDo toDo = new ToDo(description);
         addToList(toDo);
         System.out.println();
     }
 
     /**
-     * Creates a new Deadline
+     * Creates a new duke.task.Deadline
      *
      * @param line User input
      */
-    public static void addDeadline(String line){
-        int startOfDateTime = line.indexOf("by");
-        String dateTime = line.substring(startOfDateTime+3);
-        String description = line.substring(9,startOfDateTime-1);
+    private static void createDeadline(String line){
+        int startOfTaskDeadline = line.indexOf("by");
+        String taskDeadline = line.substring(startOfTaskDeadline + 3);
+        String description = line.substring(9,startOfTaskDeadline - 1);
 
-        Deadline d = new Deadline(description,dateTime);
-        addToList(d);
-        System.out.println("(at: "+ d.getDateTime() + ")");
+        Deadline deadline = new Deadline(description,taskDeadline);
+        addToList(deadline);
+        System.out.println("(by: "+ deadline.getTaskDeadline() + ")");
     }
 
     /**
-     * Creates a new Event
+     * Creates a new duke.task.Event
      *
      * @param line User input
      */
-    public static void addEvent(String line){
-        int startOfDateTime = line.indexOf("at");
-        String dateTime = line.substring(startOfDateTime+3);
-        String description = line.substring(6,startOfDateTime-1);
+    private static void createEvent(String line){
+        int startOfTaskDeadline = line.indexOf("at");
+        String taskDeadline = line.substring(startOfTaskDeadline + 3);
+        String description = line.substring(6,startOfTaskDeadline - 1);
 
-        Event e = new Event (description,dateTime);
-        addToList(e);
-        System.out.println("(at: "+ e.getDateTime() + ")");
+        Event event = new Event(description,taskDeadline);
+        addToList(event);
+        System.out.println("(at: "+ event.getTaskDeadline() + ")");
     }
 
     /**
      * Prints task list.
      *
-     * @param list Task list.
      */
-    public static void printList(Task[] list) {
+    private static void printList() {
         if (NUM_OF_TASKS == 0){
             System.out.println("The list is empty!");
         }else {
             System.out.println("Here are the tasks in your list.");
             for (int i = 0; i < NUM_OF_TASKS; i++) {
-                System.out.println(i+1 + ". " + "[" + list[i].getStatusIcon() + "] " + list[i].description);
+                System.out.print(i+1 + ". ");
+                list.get(i).print();
             }
         }
     }
 
     /**
      * Marks task as done.
+     *  @param line User Input.
      *
-     * @param line User Input.
-     * @param list Task list.
      */
-    public static void updateTask(String line,Task[] list){
+    private static void updateTask(String line){
         String taskNumString = line.substring(5);
-        int taskNumInt = Integer.parseInt(taskNumString);
-        list[taskNumInt-1].markAsDone();
+        int taskNumInt = Integer.parseInt(taskNumString)-1;
+        list.get(taskNumInt).markAsDone();
         System.out.println("Nice! I've marked this task as done:");
-        System.out.println("["+list[taskNumInt-1].getStatusIcon()+"]"+ list[taskNumInt-1].description);
+        list.get(taskNumInt).print();
     }
+
+    /**
+     * Deletes Task.
+     * @param line index of task to delete.
+     */
+    private static void deleteTask(String line){
+        String taskNumString = line.substring(7);
+        int indexOfTask = Integer.parseInt(taskNumString)-1;
+        System.out.println("Noted. I've removed this task:");
+        list.get(indexOfTask).print();
+        list.remove(indexOfTask);
+        NUM_OF_TASKS--;
+        System.out.format("Now you have %s task%s in the list.\n", NUM_OF_TASKS, ((NUM_OF_TASKS == 1 ? "" : "s")));
+    }
+
 
     /**
      * Prints goodbye.
      */
-    public static void printBye(){
+    private static void printBye(){
         System.out.println("Bye. Hope to see you again soon!");
     }
 
