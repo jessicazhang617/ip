@@ -137,6 +137,8 @@ public class Parser {
             String doneDescription = inputArguments.get(1);
             int doneTaskNum = Integer.parseInt(doneDescription);
             TaskList.getTask(doneTaskNum).markAsDone();
+            System.out.println("Got it, I've marked this task as done:");
+            System.out.println(TaskList.getTask(doneTaskNum));
         case DELETE_COMMAND:
             try {
                 String deleteDescription = inputArguments.get(1);
