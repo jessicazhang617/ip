@@ -1,5 +1,8 @@
 package duke.task;
 
+import duke.task.TaskList;
+
+
 /**
  * Represents a task.
  */
@@ -13,10 +16,8 @@ public abstract class Task {
     protected final String TICK_SYMBOL= "\u2713";
     protected final String CROSS_SYMBOL= "\u2718";
 
-    /** duke.task.Task object Constructor.*/
     public Task(String description) {
         this.description = description;
-        this.isDone = false;
     }
 
     /**
@@ -34,6 +35,7 @@ public abstract class Task {
     /** Set boolean isDone as true.*/
     public void markAsDone(){
         isDone = true;
+        System.out.println("Nice! I've marked this task as done:");
     }
 
     /** Retrieves task description.*/
@@ -42,4 +44,5 @@ public abstract class Task {
     }
 
     public abstract void print();
+
 }
