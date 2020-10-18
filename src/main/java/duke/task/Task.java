@@ -3,6 +3,7 @@ package duke.task;
 import duke.task.TaskList;
 
 
+
 /**
  * Represents a task.
  */
@@ -36,12 +37,15 @@ public abstract class Task {
     public void markAsDone(){
         isDone = true;
         System.out.println("Nice! I've marked this task as done:");
+        print();
     }
 
     /** Retrieves task description.*/
     public String getDescription() {
         return description;
     }
+
+    public abstract String toString();
 
     public abstract void print();
 

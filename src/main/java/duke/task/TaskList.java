@@ -1,28 +1,35 @@
 package duke.task;
 
+import duke.Storage;
 import duke.task.Task;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class TaskList {
-    private static ArrayList<Task> taskList = new ArrayList<>();
+
+    private static ArrayList<Task> taskList;
 
     public TaskList(ArrayList<Task> taskList) {
         this.taskList = taskList;
     }
 
-    public static void addTaskToList(Task newTask){
+    public static void addTaskToList(Task newTask) {
         taskList.add(newTask);
-        System.out.println("Got it. I've added this task:\n" + "[" + newTask.getTypeOfTask() + "]" + "[" + newTask.getStatusIcon() + "] "+
-                newTask.getDescription());
+        System.out.println("Got it. I've added this task:");
+        newTask.print();
         System.out.format("Now you have %s task%s in the list.\n", getNumOfTask(),
-                ((getNumOfTask()==1?"":"s")));
+                ((getNumOfTask() == 1 ? "" : "s")));
+
     }
 
     public static void deleteTaskFromList(int taskIndex){
-        taskList.remove(taskIndex);
         System.out.println("Noted. I've removed this task:");
-        System.out.format("Now you have %s task%s in the list.\n", taskList.size(), ((taskList.size() == 1 ? "" : "s")));
+        getTask(taskIndex).print();
+        taskList.remove(taskIndex);
+        System.out.format("Now you have %s task%s in the list.\n", taskList.size(),
+                ((taskList.size() == 1 ? "" : "s")));
     }
 
     public static int getNumOfTask(){
@@ -39,10 +46,34 @@ public class TaskList {
     }
 
     public static void printList() {
-        System.out.println("Here are the tasks in your list.");
-        for (int i = 0; i < taskList.size(); i++) {
-            System.out.print(i+1 + ". ");
-            taskList.get(i).print();
+        if (getNumOfTask()!=0){
+            System.out.println("Here are the tasks in your list.");
+            for (int i = 0; i < taskList.size(); i++) {
+                System.out.print(i + 1 + ". ");
+                taskList.get(i).print();
+            }
+        }else{
+            System.out.println("Your list is empty!");
         }
+    }
+
+    public static void findTask(String keyword) {
+        ArrayList<Task> matchingTasks = new ArrayList<>();
+        for (Task task : taskList){
+            if (task.getDescription().equalsIgnoreCase(keyword)) {
+                matchingTasks.add(task);
+            }
+        }
+        if (matchingTasks.size()>0) {
+            System.out.format("There are %s relevant task%s in the list.\n", matchingTasks.size(),
+                    ((matchingTasks.size() == 1 ? "" : "s")));
+            for (Task task : matchingTasks) {
+                System.out.println();
+                task.print();
+            }
+        }else {
+            System.out.println("There is no relevant task!");
+        }
+
     }
 }

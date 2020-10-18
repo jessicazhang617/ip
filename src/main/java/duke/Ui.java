@@ -21,16 +21,4 @@ public class Ui {
         System.out.println("Hello!\n" + "How may I help you?");
     }
 
-    /**
-     * Prints the input prompt and also to prompt the user for input.
-     *
-     * @return the raw input entered by the user
-     */
-    public static void readUserInput() throws DukeException {
-        Scanner in = new Scanner(System.in);
-        String userInput;
-        userInput = in.nextLine();
-        Parser.readUserInput(userInput);
-    }
-
 }

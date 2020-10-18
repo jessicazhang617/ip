@@ -16,14 +16,15 @@ import java.util.Scanner;
 
 
 public class Storage {
-    private String filepath;
+    private static String filepath;
+
     public Storage(String filepath) {
         this.filepath = filepath;
     }
 
-    //add scanner function to read file path;
 
     public ArrayList<Task> createFile(String filepath){
+        ArrayList<Task> listOfTaskData = new ArrayList<>();
         try {
             File file = new File(filepath);
             if (!file.exists()) {
@@ -33,28 +34,28 @@ public class Storage {
                 readExistingFile(filepath);
             }
         }catch (IOException e) {
-            System.out.println("Something went wrong when creating file" + e.getMessage());
+            System.out.println("Something went wrong when creating file: " + e.getMessage());
+            System.exit(0);
         }
-        return null;
+        return listOfTaskData;
     }
 
     private ArrayList<Task> readExistingFile(String filepath) {
         ArrayList<Task> listOfTaskData = new ArrayList<>();
 
         try {
-            String line;
-            BufferedReader br = new BufferedReader(
-                    new FileReader(filepath));
-            while ((line = br.readLine()) != null) {
-                listOfTaskData.add(Parser.decodeTaskData(line));
-            }
-        }catch (IOException e) {
+            Scanner fileReader = new Scanner(filepath);
+            String readTask = fileReader.nextLine();
+            Task loadedTask = Parser.decodeTaskData(readTask);
+            TaskList.addTaskToList(loadedTask);
+        }catch (NullPointerException e) {
+            System.out.println("File is empty.");
         }
         return listOfTaskData;
     }
 
 
-    private void writeToFile(String filePath, String textToAdd) throws IOException, DukeException {
+    public static void writeToFile(String filePath, String textToAdd) throws DukeException {
         try {
             FileWriter fileWriter = new FileWriter(filePath);
             for (Task task : TaskList.getTaskList()) {
@@ -65,5 +66,7 @@ public class Storage {
             throw new DukeException("Duke couldn't write to file.");
         }
     }
+
+    public static String getFilepath(){return filepath;}
 
 }
